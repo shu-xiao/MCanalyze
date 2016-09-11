@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "no merge list"
+#echo "test"
 for D in */
 do
     # echo "$D"
@@ -11,3 +11,4 @@ do
     # test the merge root file
     cd ../..
 done
+#echo "finished"
