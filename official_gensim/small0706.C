@@ -39,7 +39,7 @@ TH2D* readTxt(string inputDir[2],string outputName,int option=0){
 	int massA[6]={1,10,50,150,500,1000};
 	
 	TH2D* th2[5];
-	th2[0]=new TH2D("eff","eff",15,0,10,6,0,6);
+	th2[0]=new TH2D("eff","eff",15,0,15,6,0,6);
 	for(int i=0;i<15;i++){
 		for(int j=0;j<6;j++){
 			fstream file1(Form("%s_MZp-%d_MChi-%d_13TeV.txt",inputDir[0].data(),massZ[i],massA[j] ));
