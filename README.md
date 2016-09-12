@@ -1,4 +1,6 @@
 # MCanalyze
-get_crab_output sript gets crab output and merge root files automatically.\n
+get_crab_output sript gets crab output and merge root files automatically.
+
 runAll sript calculate efficiency of each file with resolved_xAna_monoHiggs.C and save the efficiency as a text file.
+
 small0706 macro plots efficiency of sample points.
