@@ -42,12 +42,12 @@ TH2D* readTxt(string inputDir[2],string outputName,int option=0){
 	th2[0]=new TH2D("eff","eff",15,0,15,6,0,6);
 	for(int i=0;i<15;i++){
 		for(int j=0;j<6;j++){
-			fstream file1(Form("%s_MZp-%d_MChi-%d_13TeV.txt",inputDir[0].data(),massZ[i],massA[j] ));
+			fstream file1(Form("%s_MZp-%d_MChi-%d_13TeV_%s.txt",inputDir[0].data(),massZ[i],massA[j],inputDir[1].data() ));
 			cout<<massA[j]*2-massZ[i]<<endl;
 			double db1=0;
 			file1>>db1;
 			if(massA[j]*2==massZ[i]){
-				fstream file2(Form("%s_MZp-%d_MChi-%d_13TeV.txt",inputDir[0].data(),massZ[i]-5,massA[j]));
+				fstream file2(Form("%s_MZp-%d_MChi-%d_13TeV_%s.txt",inputDir[0].data(),massZ[i]-5,massA[j]),inputDir[1].data());
 				cout<<"Y"<<endl;
 				file2>>db1;
 			}
@@ -75,11 +75,14 @@ void small0706(){
 	
 	string st[2]={
 		"crab_MonoHbb_ZpBaryonic",
-		""
+		"resolved"
 	};
 		
 	readTxt(st,"MonoHbb_ZpBaryonic_resolve");
-	}
+	st[1] = "boosted";
+       	readTxt(st,"MonoHbb_ZpBaryonic_booested");
+
+}
 
 
 
