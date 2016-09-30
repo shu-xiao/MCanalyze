@@ -13,6 +13,8 @@
 #include <TGraph.h>
 #include <fstream>
 
+string outputFile, outputRootFile;
+
 void efferr(float nsig,float ntotal,float factor=1)
 {
   float eff = nsig/ntotal;
@@ -28,20 +30,19 @@ void efferr(float nsig,float ntotal,float factor=1)
 using namespace std;
 void resolved_xAna_monoHiggsBase(std::string inputFile){
   //get TTree from file ...
-  TreeReader data(Form("/MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
+  TreeReader data(Form("MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
 
   TString endfix;
   endfix=gSystem->GetFromPipe(Form("file=%s; test=${file%%/crab*}; echo \"${test}\"",inputFile.data()));
-  outputFile=Form("%s_boost.txt",endfix.Data());
-  //get TTree from file ...
-  TreeReader data(inputFile.data());
+  outputFile=Form("%s_resolved.txt",endfix.Data());
+  
 
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
   TCanvas* c1 = new TCanvas("c1","",889*1.5,768);
  // TCanvas* c2 = new TCanvas("c2","",889*1.5,768);
-  TH1F*  h_pfMet_fin = new TH1F(" h_pfMet_fin", "phMet_fin", 25,0,2500);
-  TH1F*  h_pfMet = new TH1F("  h_pfMet", "phMet", 25,0,2500);  
+  //TH1F* h_pfMet_fin = new TH1F("h_pfMet_fin", "phMet_fin", 25,0,2500);
+  TH1F* h_pfMet = new TH1F("h_pfMet", "phMet", 25,0,2500);  
   TH1F* h_higgsPt = new TH1F("h_higgsPt", "higgs Pt", 20,0,2000);
   TH1F* h_higgsEta = new TH1F("h_higgsEta", "higgs Eta", 30,-3,3);
 
@@ -91,7 +92,7 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
       }
 
-    if(!passTrigger)continue;
+    //if(!passTrigger)continue;
     nPass[1]++;
 
     // apply noise filters if it is data
@@ -117,7 +118,7 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 	    break;
 	  }	
       }
-    if( isData && !passFilter )continue;
+    //if( isData && !passFilter )continue;
     nPass[2]++;
 
 
@@ -325,10 +326,10 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
     nPass[10]++;
 
 
-     h_pfMet_fin->Fill(pfMet);
+   // h_pfMet_fin->Fill(pfMet);
     h_higgsPt->Fill(higgsPt);
     h_higgsEta->Fill(higgsEta);
-   // h_deltaR_0->Fill(higgsJet.DeltaR(bjet[0]));
+    //h_deltaR_0->Fill(higgsJet.DeltaR(bjet[0]));
     //h_deltaR_1->Fill(higgsJet.DeltaR(bjet[1]));
 
     //h_higgsJetM->Fill(higgsM);
@@ -344,7 +345,7 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   efferr(nPass[10],nTotal);
   //std::cout << "Minimum deltaPhi between the AK4 jets and MET = " << mindphi << endl;
   // draw and save figure
-  h_pfMet->Draw("hist");
+  /*h_pfMet->Draw("hist");
   c1->SaveAs("h_phMet_resolved.png");
   h_pfMet_fin->Draw("hist");
   c1->SaveAs("h_phMet_fin_resolved.png");
@@ -352,12 +353,12 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   c1->SaveAs("higgsPt_resolved.png");
   h_higgsEta->Draw("hist");
   c1->SaveAs("higgsEta_resolved.png");
-
+*/
   /*h_deltaR_0->Draw("hist");
   c1->SaveAs("deltaR_0_resolved.png");
   h_deltaR_1->Draw("hist");
   c1->SaveAs("deltaR_1_resolved.png");*/
-  h_deltaR_subjet->Draw("hist");
+  /*h_deltaR_subjet->Draw("hist");
   c1->SaveAs("deltaR_subjet_resolved.png");
 
   h_extraEle->Draw("hist");
@@ -374,10 +375,11 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
   h_higgsJetM->Draw("hist");
   c1->SaveAs("h_higgsJetM_resolved.png");
-
+*/
   outputRootFile=Form("%s_resolved.root",endfix.Data());
-  TFile* outFile = new TFile(outputRootFile,"recreate");
-   h_pfMet_fin->Write();
+
+  TFile* outFile_r = new TFile(outputRootFile.data(),"recreate");
+  h_pfMet->Write();
   h_higgsPt->Write();
   h_higgsEta->Write();
   //deltaR_0->Write();
@@ -390,108 +392,108 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   h_extraAK4j->Write();
   h_higgsJetM->Write();
 
-  outFile->Close();
+  outFile_r->Close();
 
 }
 
 void resolved_xAna_monoHiggs(){
 
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi1000_hbb/160904_134335");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi10_hbb/160904_134511");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi150_hbb/160904_134422");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi1_hbb/160904_134649");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi500_hbb/160904_134558");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi50_hbb/160904_134825");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi1000_hbb/160904_134737");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi150_hbb/160904_135001");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi1_hbb/160904_134913");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi1000_hbb/160904_135049");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi150_hbb/160904_135316");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi1_hbb/160904_135226");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi500_hbb/160904_135457");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi50_hbb/160904_135404");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi1000_hbb/160904_134335");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi10_hbb/160904_134511");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi150_hbb/160904_134422");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi1_hbb/160904_134649");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi500_hbb/160904_134558");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10000_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp10000_MChi50_hbb/160904_134825");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi1000_hbb/160904_134737");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi150_hbb/160904_135001");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp1000_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp1000_MChi1_hbb/160904_134913");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi1000_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi1000_hbb/160904_135049");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi150_hbb/160904_135316");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi1_hbb/160904_135226");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi500_hbb/160904_135457");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp10_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp10_MChi50_hbb/160904_135404");
 
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp15_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp15_MChi10_hbb/160904_135633");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi150_hbb/160904_135544");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi1_hbb/160904_135813");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi50_hbb/160904_135721");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp20_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp20_MChi1_hbb/160904_135947");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp295_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp295_MChi150_hbb/160904_135859");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp300_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp300_MChi1_hbb/160904_140124");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp500_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp500_MChi150_hbb/160904_140035");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp500_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp500_MChi500_hbb/160904_140302");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi10_hbb/160904_140211");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi1_hbb/160904_140438");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi50_hbb/160904_140348");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp95_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp95_MChi50_hbb/160904_140624");
-  boosted_xAna_monoHiggsBase("Scalar_Scalar_MZp995_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp995_MChi500_hbb/160904_140534");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi1000_hbb/160904_140712");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi150_hbb/160904_140804");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi500_hbb/160904_140852");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi50_hbb/160904_140940");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp1000_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp1000_MChi1000_hbb/160904_141029");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp1000_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp1000_MChi150_hbb/160904_141118");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp100_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp100_MChi10_hbb/160904_141206");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi1000_hbb/160904_141255");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi10_hbb/160904_141341");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi1_hbb/160904_141431");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi500_hbb/160904_141524");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi50_hbb/160904_141638");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp15_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp15_MChi10_hbb/160904_141729");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp2000_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp2000_MChi1_hbb/160904_141817");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp2000_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp2000_MChi500_hbb/160904_141908");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi150_hbb/160904_141956");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi1_hbb/160904_142058");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi50_hbb/160904_142150");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp20_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp20_MChi1_hbb/160904_142237");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp295_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp295_MChi150_hbb/160904_142327");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp300_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp300_MChi1_hbb/160904_142415");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp300_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp300_MChi50_hbb/160904_142504");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp15_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp15_MChi10_hbb/160904_135633");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi150_hbb/160904_135544");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi1_hbb/160904_135813");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp200_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp200_MChi50_hbb/160904_135721");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp20_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp20_MChi1_hbb/160904_135947");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp295_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp295_MChi150_hbb/160904_135859");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp300_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp300_MChi1_hbb/160904_140124");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp500_MChi150_hbb/crab_MonoH-Scalar_Scalar_MZp500_MChi150_hbb/160904_140035");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp500_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp500_MChi500_hbb/160904_140302");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi10_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi10_hbb/160904_140211");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi1_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi1_hbb/160904_140438");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp50_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp50_MChi50_hbb/160904_140348");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp95_MChi50_hbb/crab_MonoH-Scalar_Scalar_MZp95_MChi50_hbb/160904_140624");
+  resolved_xAna_monoHiggsBase("Scalar_Scalar_MZp995_MChi500_hbb/crab_MonoH-Scalar_Scalar_MZp995_MChi500_hbb/160904_140534");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi1000_hbb/160904_140712");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi150_hbb/160904_140804");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi500_hbb/160904_140852");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10000_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10000_MChi50_hbb/160904_140940");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp1000_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp1000_MChi1000_hbb/160904_141029");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp1000_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp1000_MChi150_hbb/160904_141118");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp100_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp100_MChi10_hbb/160904_141206");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi1000_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi1000_hbb/160904_141255");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi10_hbb/160904_141341");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi1_hbb/160904_141431");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi500_hbb/160904_141524");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp10_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp10_MChi50_hbb/160904_141638");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp15_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp15_MChi10_hbb/160904_141729");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp2000_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp2000_MChi1_hbb/160904_141817");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp2000_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp2000_MChi500_hbb/160904_141908");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi150_hbb/160904_141956");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi1_hbb/160904_142058");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp200_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp200_MChi50_hbb/160904_142150");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp20_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp20_MChi1_hbb/160904_142237");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp295_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp295_MChi150_hbb/160904_142327");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp300_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp300_MChi1_hbb/160904_142415");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp300_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp300_MChi50_hbb/160904_142504");
   
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi150_hbb/160904_142555");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi1_hbb/160904_142645");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi500_hbb/160904_142732");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi10_hbb/160904_142822");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi1_hbb/160904_142909");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi50_hbb/160904_143002");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp95_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp95_MChi50_hbb/160904_143102");
-  boosted_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp995_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp995_MChi500_hbb/160904_143203");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi150_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi150_hbb/160904_142555");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi1_hbb/160904_142645");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp500_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp500_MChi500_hbb/160904_142732");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi10_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi10_hbb/160904_142822");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi1_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi1_hbb/160904_142909");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp50_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp50_MChi50_hbb/160904_143002");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp95_MChi50_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp95_MChi50_hbb/160904_143102");
+  resolved_xAna_monoHiggsBase("ZpBaryonic_ZpBaryonic_MZp995_MChi500_hbb/crab_MonoH-ZpBaryonic_ZpBaryonic_MZp995_MChi500_hbb/160904_143203");
   
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi1000_hbb/160905_192611");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi10_hbb/160905_192728");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi150_hbb/160905_192843");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi1_hbb/160905_193000");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi500_hbb/160905_193119");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi50_hbb/160905_193235");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi1000_hbb/160905_193352");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi150_hbb/160905_193509");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi1_hbb/160905_193625");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp100_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp100_MChi10_hbb/160905_193741");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp100_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp100_MChi1_hbb/160905_193859");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi1000_hbb/160905_194016");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi10_hbb/160905_194139");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi150_hbb/160905_194254");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi1_hbb/160905_194410");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi1000_hbb/160905_192611");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi10_hbb/160905_192728");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi150_hbb/160905_192843");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi1_hbb/160905_193000");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi500_hbb/160905_193119");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10000_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp10000_MChi50_hbb/160905_193235");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi1000_hbb/160905_193352");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi150_hbb/160905_193509");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp1000_MChi1_hbb/160905_193625");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp100_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp100_MChi10_hbb/160905_193741");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp100_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp100_MChi1_hbb/160905_193859");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi1000_hbb/160905_194016");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi10_hbb/160905_194139");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi150_hbb/160905_194254");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi1_hbb/160905_194410");
   
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi500_hbb/160905_194527");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi50_hbb/160905_194644");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp15_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp15_MChi10_hbb/160905_194805");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1995_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp1995_MChi1000_hbb/160905_194927");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp2000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp2000_MChi1_hbb/160905_195046");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp2000_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp2000_MChi500_hbb/160905_195208");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi150_hbb/160905_195327");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi1_hbb/160905_195443");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi50_hbb/160905_195559");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp20_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp20_MChi1_hbb/160905_195716");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp295_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp295_MChi150_hbb/160905_195832");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp300_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp300_MChi1_hbb/160905_195947");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp300_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp300_MChi50_hbb/160905_200103");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi150_hbb/160905_200224");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi500_hbb/160905_194527");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp10_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp10_MChi50_hbb/160905_194644");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp15_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp15_MChi10_hbb/160905_194805");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp1995_MChi1000_hbb/crab_MonoH-ZpHS_ZpHS_MZp1995_MChi1000_hbb/160905_194927");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp2000_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp2000_MChi1_hbb/160905_195046");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp2000_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp2000_MChi500_hbb/160905_195208");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi150_hbb/160905_195327");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi1_hbb/160905_195443");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp200_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp200_MChi50_hbb/160905_195559");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp20_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp20_MChi1_hbb/160905_195716");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp295_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp295_MChi150_hbb/160905_195832");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp300_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp300_MChi1_hbb/160905_195947");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp300_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp300_MChi50_hbb/160905_200103");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi150_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi150_hbb/160905_200224");
 
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi1_hbb/160905_200432");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi500_hbb/160905_200603");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi10_hbb/160905_200747");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi1_hbb/160905_200905");
-  boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi50_hbb/160905_201022");
-  //boosted_xAna_monoHiggsBase("");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi1_hbb/160905_200432");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp500_MChi500_hbb/crab_MonoH-ZpHS_ZpHS_MZp500_MChi500_hbb/160905_200603");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi10_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi10_hbb/160905_200747");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi1_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi1_hbb/160905_200905");
+  resolved_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi50_hbb/160905_201022");
+  //resolved_xAna_monoHiggsBase("");
 }

@@ -11,6 +11,7 @@
 #include <TLorentzVector.h>
 #include <fstream>
 #include <TCanvas.h>
+#include <TTreeReader.h>
 
 string outputFile, outputRootFile;
 
@@ -30,18 +31,20 @@ using namespace std;
 void boosted_xAna_monoHiggsBase(std::string inputFile){
 
   //get TTree from file ...
-  TreeReader data(Form("/MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
+//  TreeReader data(Form("/data7/khurana/MonoHPrivateSamples/PrivateSamplesForEfficiency/MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
+  TreeReader data(Form("MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
+
 
   TString endfix;
   endfix=gSystem->GetFromPipe(Form("file=%s; test=${file%%/crab*}; echo \"${test}\"",inputFile.data()));
-  outputFile=Form("%s_boost.txt",endfix.Data());
+  outputFile=Form("%s_boosted.txt",endfix.Data());
 
   Long64_t nTotal=0;
   Long64_t nPass[20]={0};
   TCanvas* c1 = new TCanvas("c1","",889*1.5,768);
  // TCanvas* c2 = new TCanvas("c2","",889*1.5,768);
-  TH1F*  h_pfMet_fin = new TH1F("  h_pfMet_fin", "phMet_fin", 25,0,2500);
-  TH1F*  h_pfMet = new TH1F("  h_pfMet", "phMet", 25,0,2500);
+  //TH1F* h_pfMet_fin = new TH1F("h_pfMet_fin", "phMet_fin", 25,0,2500);
+  TH1F* h_pfMet = new TH1F("h_pfMet", "phMet", 25,0,2500);
   TH1F* h_higgsPt = new TH1F("h_higgsPt", "higgs Pt", 20,0,2000);
   TH1F* h_higgsEta = new TH1F("h_higgsEta", "higgs Eta", 30,-3,3);
 
@@ -93,7 +96,7 @@ void boosted_xAna_monoHiggsBase(std::string inputFile){
 
       }
 
-    if(!passTrigger)continue;
+    //if(!passTrigger)continue;
     nPass[1]++;
 
     // apply noise filters if it is data
@@ -119,7 +122,7 @@ void boosted_xAna_monoHiggsBase(std::string inputFile){
       break;
     } 
       }
-    if( isData && !passFilter )continue;
+    //if( isData && !passFilter )continue;
     nPass[2]++;
   
 
@@ -322,7 +325,7 @@ void boosted_xAna_monoHiggsBase(std::string inputFile){
     nPass[11]++;
 
 
-      h_pfMet_fin->Fill(pfMet);
+    //h_pfMet_fin->Fill(pfMet);
     h_higgsPt->Fill(higgsPt);
     h_higgsEta->Fill(higgsEta);
   //  deltaR_0->Fill(higgsJet->DeltaR(bjet[0]));hh
@@ -372,9 +375,9 @@ void boosted_xAna_monoHiggsBase(std::string inputFile){
   h_mindphi->Draw("hist");
   c1->SaveAs("mindphi_boosted.png");
   */
-  outputRootFile=Form("%s_boost.root",endfix.Data());
-  TFile* outFile = new TFile(outputRootFile,"recreate");
-  h_pfMet_fin->Write();
+  outputRootFile=Form("%s_boosted.root",endfix.Data());
+  TFile* outFile = new TFile(outputRootFile.data(),"recreate");
+  //h_pfMet_fin->Write();
   h_pfMet->Write();
   h_higgsPt->Write();
   h_higgsEta->Write();
