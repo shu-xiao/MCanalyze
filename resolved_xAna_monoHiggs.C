@@ -11,21 +11,29 @@
 #include <TLorentzVector.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+<<<<<<< HEAD
 #include <fstream>
+=======
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 
 void efferr(float nsig,float ntotal,float factor=1)
 {
   float eff = nsig/ntotal;
   float err = sqrt( (1-eff)*eff/ntotal);
   cout << "efficiency = " << eff*factor << " +- " << err*factor << endl;
+<<<<<<< HEAD
   ofstream myfile;
   myfile.open (outputFile.data());
   myfile<<eff*factor<<endl;
   myfile<<err*factor;
+=======
+
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 }
 
 
 using namespace std;
+<<<<<<< HEAD
 void resolved_xAna_monoHiggsBase(std::string inputFile){
   //get TTree from file ...
   TreeReader data(Form("/MonoH-%s/0000/NCUGlobalTuples_1.root",inputFile.data()));
@@ -33,6 +41,10 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   TString endfix;
   endfix=gSystem->GetFromPipe(Form("file=%s; test=${file%%/crab*}; echo \"${test}\"",inputFile.data()));
   outputFile=Form("%s_boost.txt",endfix.Data());
+=======
+void resolved_xAna_monoHiggs(std::string inputFile){
+
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
   //get TTree from file ...
   TreeReader data(inputFile.data());
 
@@ -40,6 +52,7 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   Long64_t nPass[20]={0};
   TCanvas* c1 = new TCanvas("c1","",889*1.5,768);
  // TCanvas* c2 = new TCanvas("c2","",889*1.5,768);
+<<<<<<< HEAD
   TH1F*  h_pfMet_fin = new TH1F(" h_pfMet_fin", "phMet_fin", 25,0,2500);
   TH1F*  h_pfMet = new TH1F("  h_pfMet", "phMet", 25,0,2500);  
   TH1F* h_higgsPt = new TH1F("h_higgsPt", "higgs Pt", 20,0,2000);
@@ -55,6 +68,23 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   TH1F* h_extraAK4j = new TH1F("h_extraAK4Jet", "extra AK4 jet", 8,-0.5,7.5);
   TH1F* h_mindphi = new TH1F("h_mindphi", "Minimum delta phi", 17,0,3.4);
   TH1F* h_higgsJetM = new TH1F("h_higgsJetMass", "higgs jet Mass", 24,50,170);
+=======
+  TH1F* h_pfMet = new TH1F("h_pfMet", "phMet", 22,-50,2150);
+  TH1F* h_higgsPt = new TH1F("h_higgsPt", "higgs Pt", 15,-50,1450);
+  TH1F* h_higgsEta = new TH1F("h_higgsEta", "higgs Eta", 30,-3.1,2.9);
+
+  TH1F* deltaR_0 = new TH1F("h_deltaR_0", "deltaR_0", 15,-0.05,1.45);
+  TH1F* deltaR_1 = new TH1F("h_deltaR_1", "deltaR_1", 15,-0.05,1.45);
+  TH1F* deltaR_subjet = new TH1F("h_deltaR_subjet", "deltaR_subjet", 20,-0.05,1.95);
+  TH1F* extraEle = new TH1F("h_extraEle", "extra electrons", 6,-0.5,5.5);
+  TH1F* extraMuo = new TH1F("h_extraMuo", "extra muons", 6,-0.5,5.5);
+  TH1F* extraTau = new TH1F("h_extraTau", "extra tau", 6,-0.5,5.5);
+  TH1F* extrabj = new TH1F("h_extraBJet", "extra b jet", 8,-0.5,7.5);
+  TH1F* extraAK4j = new TH1F("h_extraAK4Jet", "extra AK4 jet", 8,-0.5,7.5);
+
+  TH1F* h_higgsJetM = new TH1F("h_higgsJetMass", "higgs jet Mass", 20,100-2.5,200-2.5);
+  float mindphi = 99;
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 
   for(Long64_t jEntry=0; jEntry<data.GetEntriesFast() ;jEntry++){
 
@@ -124,7 +154,11 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
     float pfMet = data.GetFloat("pfMetCorrPt");
     float pfMetPhi = data.GetFloat("pfMetCorrPhi");
+<<<<<<< HEAD
     h_pfMet->Fill(pfMet);
+=======
+    
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     if(pfMet<170.)continue;
     nPass[3]++;
 
@@ -188,9 +222,15 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
       }
 
 
+<<<<<<< HEAD
     h_extraEle->Fill(myEles.size());
     h_extraMuo->Fill(myMuos.size());
     h_extraTau->Fill(myTaus.size());
+=======
+    if(myEles.size()>0)  extraEle->Fill(myEles.size());
+    if(myMuos.size()>0)  extraMuo->Fill(myMuos.size());
+    if(myTaus.size()>0)  extraTau->Fill(myTaus.size());
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     if(myEles.size()>0)  continue;
     if(myMuos.size()>0)  continue;
     if(myTaus.size()>0)  continue;
@@ -232,7 +272,11 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 	float thisHpt = (*thisJet + *thatJet).Pt();
 	float thisHmass = (*thisJet + *thatJet).M();
 	if(thisHpt < 150.)continue;
+<<<<<<< HEAD
       h_higgsJetM->Fill(thisHmass);
+=======
+
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 	if(thisHmass < 100)continue;
 	if(thisHmass > 150)continue;
 	
@@ -259,9 +303,14 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
     float higgsPt, higgsEta, higgsM;
     higgsPt = higgsJet.Pt();
     higgsEta = higgsJet.Eta();
+<<<<<<< HEAD
     higgsM = higgsJet.M();
     //h_higgsJetM->Fill(higgsM);
     h_deltaR_subjet->Fill(bjet[0].DeltaR(bjet[1]));
+=======
+    //higgsM = higgsJet.M();
+
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     // cout << "Hindex [0] = " << Hindex[0] << endl;
     // cout << "Hindex [1] = " << Hindex[1] << endl;
 
@@ -284,7 +333,11 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
       if(thisJet->DeltaR(bjet[0])<0.4)continue;
       if(thisJet->DeltaR(bjet[1])<0.4)continue;
+<<<<<<< HEAD
       
+=======
+
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 
       nGoodTHINJets++;
       jetIndex=ij;
@@ -296,8 +349,13 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
     } // end of loop
 
+<<<<<<< HEAD
     h_extraAK4j->Fill(nGoodTHINJets); // extra AK4Jet
     h_extrabj->Fill(nGoodTHINBJets); // extra b Jet
+=======
+    if(nGoodTHINJets>1) extraAK4j->Fill(nGoodTHINJets); // extra AK4Jet
+    if(nGoodTHINBJets>0)  extrabj->Fill(nGoodTHINBJets); // extra b Jet
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     if(nGoodTHINBJets>0)   continue; 
     if(nGoodTHINJets>1) continue;
     nPass[8]++;    
@@ -306,31 +364,56 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
     bool passDphi=true;
     TLorentzVector AK4Bjet(0,0,0,0);
+<<<<<<< HEAD
     float mindphi = 99;
+=======
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     for(unsigned int i=0; i<indexForDPhi.size(); i++)
       {
 	int jetIndex=indexForDPhi[i];
 	TLorentzVector* thisJet = (TLorentzVector*)thinjetP4->At(jetIndex); 
+<<<<<<< HEAD
        //AK4Bjet +=  *thisJet;
 	double dphi=TVector2::Phi_mpi_pi(pfMetPhi-thisJet->Phi()); 
        if (mindphi > fabs(dphi)) mindphi = fabs(dphi);
+=======
+       AK4Bjet +=  *thisJet;
+	double dphi=TVector2::Phi_mpi_pi(pfMetPhi-thisJet->Phi()); 
+       float tem_mindfhp = 99;
+       if (tem_mindfhp > fabs(dphi)) tem_mindfhp = fabs(dphi);
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
 	   if(fabs(dphi)<0.4)
 	  {
 	    passDphi=false;
 	    //break;
 	  }
+<<<<<<< HEAD
       }    
     h_mindphi->Fill(mindphi);
+=======
+      if (tem_mindfhp < mindphi && passDphi && i == indexForDPhi.size()-1) mindphi = fabs(dphi);
+      }    
+    h_higgsJetM->Fill(AK4Bjet.M());
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     if(!passDphi)continue;
     nPass[10]++;
 
 
+<<<<<<< HEAD
      h_pfMet_fin->Fill(pfMet);
     h_higgsPt->Fill(higgsPt);
     h_higgsEta->Fill(higgsEta);
    // h_deltaR_0->Fill(higgsJet.DeltaR(bjet[0]));
     //h_deltaR_1->Fill(higgsJet.DeltaR(bjet[1]));
 
+=======
+    h_pfMet->Fill(pfMet);
+    h_higgsPt->Fill(higgsPt);
+    h_higgsEta->Fill(higgsEta);
+    deltaR_0->Fill(higgsJet.DeltaR(bjet[0]));
+    deltaR_1->Fill(higgsJet.DeltaR(bjet[1]));
+    deltaR_subjet->Fill(bjet[0].DeltaR(bjet[1]));
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
     //h_higgsJetM->Fill(higgsM);
   } // end of loop over entries
 
@@ -342,17 +425,25 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
 
 
   efferr(nPass[10],nTotal);
+<<<<<<< HEAD
   //std::cout << "Minimum deltaPhi between the AK4 jets and MET = " << mindphi << endl;
   // draw and save figure
   h_pfMet->Draw("hist");
   c1->SaveAs("h_phMet_resolved.png");
   h_pfMet_fin->Draw("hist");
   c1->SaveAs("h_phMet_fin_resolved.png");
+=======
+  std::cout << "Minimum deltaPhi between the AK4 jets and MET = " << mindphi << endl;
+  // draw and save figure
+  h_pfMet->Draw("hist");
+  c1->SaveAs("h_phMet_resolved.png");
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
   h_higgsPt->Draw("hist");
   c1->SaveAs("higgsPt_resolved.png");
   h_higgsEta->Draw("hist");
   c1->SaveAs("higgsEta_resolved.png");
 
+<<<<<<< HEAD
   /*h_deltaR_0->Draw("hist");
   c1->SaveAs("deltaR_0_resolved.png");
   h_deltaR_1->Draw("hist");
@@ -370,11 +461,31 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   h_extrabj->Draw("hist");
   c1->SaveAs("extraBJet_resolved.png");
   h_extraAK4j->Draw("hist");
+=======
+  deltaR_0->Draw("hist");
+  c1->SaveAs("deltaR_0_resolved.png");
+  deltaR_1->Draw("hist");
+  c1->SaveAs("deltaR_1_resolved.png");
+  deltaR_subjet->Draw("hist");
+  c1->SaveAs("deltaR_subjet_resolved.png");
+
+  extraEle->Draw("hist");
+  c1->SaveAs("extraElectron_resolved.png");
+  extraMuo->Draw("hist");
+  c1->SaveAs("extraMuon_resolved.png");
+  extraTau->Draw("hist");
+  c1->SaveAs("extraTau_resolved.png");
+
+  extrabj->Draw("hist");
+  c1->SaveAs("extraBJet_resolved.png");
+  extraAK4j->Draw("hist");
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
   c1->SaveAs("extraAK4jet_resolved.png");
 
   h_higgsJetM->Draw("hist");
   c1->SaveAs("h_higgsJetM_resolved.png");
 
+<<<<<<< HEAD
   outputRootFile=Form("%s_resolved.root",endfix.Data());
   TFile* outFile = new TFile(outputRootFile,"recreate");
    h_pfMet_fin->Write();
@@ -388,11 +499,26 @@ void resolved_xAna_monoHiggsBase(std::string inputFile){
   h_extraTau->Write();
   h_extrabj->Write();
   h_extraAK4j->Write();
+=======
+  TFile* outFile = new TFile("plot_resolved.root","recreate");
+  h_pfMet->Write();
+  h_higgsPt->Write();
+  h_higgsEta->Write();
+  deltaR_0->Write();
+  deltaR_1->Write();
+  deltaR_subjet->Write();
+  extraEle->Write();
+  extraMuo->Write();
+  extraTau->Write();
+  extrabj->Write();
+  extraAK4j->Write();
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
   h_higgsJetM->Write();
 
   outFile->Close();
 
 }
+<<<<<<< HEAD
 
 void resolved_xAna_monoHiggs(){
 
@@ -495,3 +621,5 @@ void resolved_xAna_monoHiggs(){
   boosted_xAna_monoHiggsBase("ZpHS_ZpHS_MZp50_MChi50_hbb/crab_MonoH-ZpHS_ZpHS_MZp50_MChi50_hbb/160905_201022");
   //boosted_xAna_monoHiggsBase("");
 }
+=======
+>>>>>>> 103f93e316b0040af7c8d5411eec614a88dcc0cb
