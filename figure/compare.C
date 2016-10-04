@@ -51,7 +51,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_pfMet2->GetYaxis()->CenterTitle();
     h_pfMet2->GetXaxis()->SetTitle("E (GeV)");
     h_pfMet2->GetXaxis()->SetTitleSize(0.04);
-
+    h_pfMet2->SetMaximum(h_pfMet1->GetMaximum()>h_pfMet2->GetMaximum()?h_pfMet1->GetMaximum()*1.1:h_pfMet2->GetMaximum()*1.1);
     h_pfMet2->Draw("hist");
     h_pfMet1->Draw("histsame");
 
@@ -92,7 +92,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_higgsPt2->GetYaxis()->CenterTitle();
     h_higgsPt2->GetXaxis()->SetTitle("Pt (GeV)");
     h_higgsPt2->GetXaxis()->SetTitleSize(0.04);
-
+    h_higgsPt2->SetMaximum(h_higgsPt2->GetMaximum()>h_higgsPt1->GetMaximum()?h_higgsPt2->GetMaximum()*1.1:h_higgsPt1->GetMaximum()*1.1);
     h_higgsPt2->Draw("hist");
     h_higgsPt1->Draw("histsame");
 
@@ -129,7 +129,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_higgsEta2->GetYaxis()->CenterTitle();
     h_higgsEta2->GetXaxis()->SetTitle("#eta");
     h_higgsEta2->GetXaxis()->SetTitleSize(0.04);
-
+    h_higgsEta2->SetMaximum(h_higgsEta1->GetMaximum()>h_higgsEta2->GetMaximum()?h_higgsEta1->GetMaximum()*1.1:h_higgsEta2->GetMaximum()*1.1);
     h_higgsEta2->Draw("hist");
     h_higgsEta1->Draw("histsame");
 
@@ -167,7 +167,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_deltaR1->GetYaxis()->CenterTitle();
     h_deltaR1->GetXaxis()->SetTitle("deltaR");
     h_deltaR1->GetXaxis()->SetTitleSize(0.04);
-
+    h_deltaR1->SetMaximum(h_deltaR1->GetMaximum()>h_deltaR2->GetMaximum()?h_deltaR1->GetMaximum()*1.1:h_deltaR2->GetMaximum()*1.1);
     h_deltaR1->Draw("hist");
     h_deltaR2->Draw("histsame");
 
@@ -204,7 +204,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_extraEle2->GetYaxis()->CenterTitle();
     h_extraEle2->GetXaxis()->SetTitle("extra Electrons");
     h_extraEle2->GetXaxis()->SetTitleSize(0.04);
-
+    h_extraEle2->SetMaximum(h_extraEle1->GetMaximum()>h_extraEle2->GetMaximum()?h_extraEle1->GetMaximum()*1.1:h_extraEle2->GetMaximum()*1.1);
     h_extraEle2->Draw("hist");
     h_extraEle1->Draw("histsame");
 
@@ -241,7 +241,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_extraMuo2->GetYaxis()->CenterTitle();
     h_extraMuo2->GetXaxis()->SetTitle("extra muons");
     h_extraMuo2->GetXaxis()->SetTitleSize(0.04);
-
+    h_extraMuo2->SetMaximum(h_extraMuo1->GetMaximum()>h_extraMuo2->GetMaximum()?h_extraMuo1->GetMaximum()*1.1:h_extraMuo2->GetMaximum()*1.1);
     h_extraMuo2->Draw("hist");
     h_extraMuo1->Draw("histsame");
 
@@ -278,7 +278,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_extraTau2->GetYaxis()->CenterTitle();
     h_extraTau2->GetXaxis()->SetTitle("extra Taus");
     h_extraTau2->GetXaxis()->SetTitleSize(0.04);
-
+    h_extraTau2->SetMaximum(h_extraTau1->GetMaximum()>h_extraTau2->GetMaximum()?h_extraTau1->GetMaximum()*1.1:h_extraTau2->GetMaximum()*1.1);
     h_extraTau2->Draw("hist");
     h_extraTau1->Draw("histsame");
 
@@ -315,7 +315,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_extraBJet2->GetYaxis()->CenterTitle();
     h_extraBJet2->GetXaxis()->SetTitle("extra b Jets");
     h_extraBJet2->GetXaxis()->SetTitleSize(0.04);
-
+    h_extraBJet2->SetMaximum(h_extraBJet1->GetMaximum()>h_extraBJet2->GetMaximum()?h_extraBJet1->GetMaximum()*1.1:h_extraBJet2->GetMaximum()*1.1);
     h_extraBJet2->Draw("hist");
     h_extraBJet1->Draw("histsame");
 
@@ -352,7 +352,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_extraAK4Jet1->GetYaxis()->CenterTitle();
     h_extraAK4Jet1->GetXaxis()->SetTitle("extra AK4 Jets");
     h_extraAK4Jet1->GetXaxis()->SetTitleSize(0.04);
-
+    h_extraAK4Jet1->SetMaximum(h_extraAK4Jet1->GetMaximum()>h_extraAK4Jet2->GetMaximum()?h_extraAK4Jet1->GetMaximum()*1.1:h_extraAK4Jet2->GetMaximum()*1.1);
     h_extraAK4Jet1->Draw("hist");
     h_extraAK4Jet2->Draw("histsame");
 
@@ -389,6 +389,7 @@ void comparebase(string MZp, string MChi, string macro) {
     h_higgsJetMass1->GetYaxis()->CenterTitle();
     h_higgsJetMass1->GetXaxis()->SetTitle("M (GeV)");
     h_higgsJetMass1->GetXaxis()->SetTitleSize(0.04);
+    h_higgsJetMass1->SetMaximum(h_higgsJetMass1->GetMaximum()>h_higgsJetMass2->GetMaximum()?h_higgsJetMass1->GetMaximum()*1.1:h_higgsJetMass2->GetMaximum()*1.1);
     h_higgsJetMass1->Draw("hist");
     h_higgsJetMass2->Draw("histsame");
 
