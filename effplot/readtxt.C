@@ -22,7 +22,7 @@ Float_t eff0[8];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip += 1;
 		continue;}
@@ -48,7 +48,7 @@ Float_t eff1[8];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip+=1;
 		continue;}
@@ -72,7 +72,7 @@ Float_t eff2[7];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip+=1;
 		continue;}
@@ -96,7 +96,7 @@ Float_t eff3[6];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip+=1;
 		continue;}
@@ -120,7 +120,7 @@ Float_t eff4[6];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip+=1;
 		continue;}
@@ -144,7 +144,7 @@ Float_t eff5[6];
 skip=0;
 for (int i=0;i<8;i++) {
 	//cout << "mzp"<< mzp[i] << endl;
-	fstream file(Form("SReffitxt/ZptoA0h_MZp-%i_MA0-%d.txt",(int)mzp[i],ma0[j]));
+	fstream file(Form("efftxtfile/Merged_ZprimeToA0hToA0chichihbb_2HDM_MZp-%i_MA0-%d_13TeV-madgraph-SkimTree.root_HistogramsSignalRegion.txt",(int)mzp[i],ma0[j]));
 	if (!file.is_open()) {
 		skip+=1;
 		continue;}
@@ -165,9 +165,9 @@ effplot[5]->GetXaxis()->SetTitle("M_{Z'} [GeV]");
 effplot[5]->GetYaxis()->SetTitle("efficiency");
 
 for (int i=0;i<6;i++) {
-	effplot[i]->GetXaxis()->SetLimits(600.,2600.);
+	effplot[i]->GetXaxis()->SetLimits(500.,2600.);
 	effplot[i]->SetMinimum(0.);
-	effplot[i]->SetMaximum(0.35);
+	effplot[i]->SetMaximum(0.5);
 	effplot[i]->Draw();
 }
 
