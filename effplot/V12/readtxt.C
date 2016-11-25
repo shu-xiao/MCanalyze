@@ -163,7 +163,7 @@ effplot[j]->SetMarkerColor(linecolor[j]);
 effplot[5]->SetTitle("");
 effplot[5]->GetXaxis()->SetTitle("M_{Z'} [GeV]");
 effplot[5]->GetYaxis()->SetTitle("efficiency");
-
+c1->Clear();
 for (int i=0;i<6;i++) {
 	effplot[i]->GetXaxis()->SetLimits(500.,2600.);
 	effplot[i]->SetMinimum(0.);
@@ -182,7 +182,7 @@ for (int i=0;i<6;i++){
 }
 
 
-effplot[0]->Draw("LP");
+effplot[0]->Draw("LPsame");
 for (int i=1;i<6;i++) {
 	effplot[i]->Draw("LPsame");
 }
